@@ -18,7 +18,36 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/app', function () {
-        return Inertia::render('App');
-    })->name('app');
+
+    Route::group(['prefix' => '/app'], function(){
+
+        // Homepage
+        Route::get('/', function(){
+            return Inertia::render('App');
+        })->name('app');
+
+        // Teams
+        Route::group(['prefix' => '/teams'], function(){
+                
+            Route::get('/', function(){
+                return Inertia::render('App');
+            })->name('app.teams');
+
+        });
+
+        // Snippit
+        Route::group(['prefix' => '/snippit'], function(){
+                
+            Route::get('/', function(){
+                return Inertia::render('App');
+            })->name('app.snippit');
+
+        });
+
+        // Homepage OOB
+        Route::get('/oob', function(){
+            return Inertia::render('AppOob');
+        });
+    });
+
 });

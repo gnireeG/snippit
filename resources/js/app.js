@@ -8,7 +8,6 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import store from './store';
 
 // globally available components
-import { Link } from '@inertiajs/vue3';
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -21,7 +20,6 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(store)
-            .use('Link', Link)
             .mount(el);
     },
     progress: {

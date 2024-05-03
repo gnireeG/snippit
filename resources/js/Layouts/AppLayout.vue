@@ -7,7 +7,7 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
-import Navbar from '@/Components/Navigation/Navbar.vue';
+import Navbar from '@/Comp/Navigation/Navbar.vue';
 
 const showingNavigationDropdown = ref(false);
 
@@ -25,11 +25,11 @@ const navOpen = ref(false);
 <style scoped>
 .main-grid{
     display: grid;
-    grid-template-columns: 60px auto;
+    grid-template-columns: 68px auto;
     transition: grid-template-columns 0.5s;
 }
 
 .main-grid.open{
-    grid-template-columns: 200px auto;
+    grid-template-columns: 240px auto;
 }
 </style>

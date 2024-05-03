@@ -1,8 +1,8 @@
 import { useStore } from "vuex/types/index.js";
 
 <template>
-<div :class="[theme == 'light' ? '' : 'dark' ]" class="dark-mode-toggle">
-    <button title="Toggle Theme" @click="changeMode()">
+<div :class="[theme == 'light' ? '' : 'dark' ]" class="dark-mode-toggle flex gap-2">
+    <button title="Toggle Theme" @click="changeMode()" class="px-1.5">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <!-- Moon -->
         <path pathLength="1" class="moon-icon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
@@ -18,12 +18,21 @@ import { useStore } from "vuex/types/index.js";
         <line pathLength="1" class="sun-icon" x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
       </svg>
     </button>
+    <p :class="expand ? 'opacity-100' : 'opacity-0'" class="transition-opacity whitespace-nowrap duration-500">{{ theme == 'light' ? 'Light mode' : 'Dark mode' }}</p>
   </div>
 </template>
 <script setup>
 
 import { onMounted, ref } from "vue";
 import { useStore } from 'vuex'
+
+const props = defineProps({
+    expand: {
+        type: Boolean,
+        required: false,
+        default: false
+    }
+})
 
 const store = useStore()
 const storageKey = 'theme-preference'
