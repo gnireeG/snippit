@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\AppController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -22,9 +23,7 @@ Route::middleware([
     Route::group(['prefix' => '/app'], function(){
 
         // Homepage
-        Route::get('/', function(){
-            return Inertia::render('App');
-        })->name('app');
+        Route::get('/', [AppController::class, 'index'])->name('app');
 
         // Teams
         Route::group(['prefix' => '/teams'], function(){

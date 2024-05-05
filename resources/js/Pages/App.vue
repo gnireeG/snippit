@@ -1,21 +1,21 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import Welcome from '@/Components/Welcome.vue';
+import SnippitCard from '@/Comp/Snippits/SnippitCard.vue';
+const props = defineProps({
+    snippits: Object
+})
 </script>
 
 <template>
     <AppLayout title="Snippit App">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                App
-            </h2>
-        </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                    <Welcome />
-                </div>
+        <div class="p-8">
+            <h1 class="heading-1">Hello {{ $page.props.auth.user.name }}</h1>
+            <p class="text-lg mt-2">You are currently in the <b class="italic">{{ $page.props.auth.user.current_team.name }}</b> team.</p>
+            <div class="mt-8 autogrid gap-4">
+                <template v-for="snippit in snippits">
+                    <SnippitCard :snippit="snippit" />
+                </template>
             </div>
         </div>
     </AppLayout>

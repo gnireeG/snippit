@@ -1,4 +1,5 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+@import url("https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,4 +10,62 @@
 
 .separator{
     @apply border-t-2 border-gray-400 dark:border-gray-600
+}
+
+.autogrid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+}
+
+/* BUTTONS */
+.btn{
+    @apply rounded-md px-3 py-2 bg-slate-800 text-gray-200 dark:bg-gray-300 dark:text-slate-800 transition-all;
+
+}
+.btn.btn-icon{
+    @apply rounded-full w-8 h-8 flex items-center justify-center ;
+}
+.btn:hover{
+    @apply bg-slate-800 dark:bg-gray-400;
+}
+.btn:active{
+    @apply scale-90;
+}
+
+.textlink::after{
+    content: "";
+    display: block;
+    width: 80%;
+    height: 2px;
+    background-color: currentColor;
+    margin-left: 10%;
+    transition: margin-left 0.2s, width 0.2s;
+}
+.textlink:hover::after{
+    margin-left: 0;
+    width: 100%;
+}
+
+/* BACKGROUND COLORS */
+.bg-primary{
+    @apply dark:bg-slate-800 dark:text-gray-300 bg-slate-50 text-gray-800;
+}
+
+.bg-secondary{
+    @apply dark:bg-slate-900 dark:text-gray-300 bg-slate-200 text-gray-800;
+}
+
+/* HEADINGS */
+
+.heading-1{
+    @apply text-3xl font-bold;
+}
+
+.heading-2{
+    @apply text-2xl font-bold;
+}
+
+.heading-3{
+    @apply text-xl font-bold;
 }
