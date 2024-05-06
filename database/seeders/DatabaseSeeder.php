@@ -24,5 +24,78 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
         Snippit::factory(100)->create();
+        Snippit::factory()->create([
+            'title' => 'CSS Test Snippit',
+            'description' => 'This is a test snippit for testing CSS',
+            'code' => 'body {
+    background-color: #f4f4f4;
+}',
+            'user_id' => rand(1, 10),
+            'team_id' => 21,
+            'language' => 'css'
+        ]);
+        Snippit::factory()->create([
+            'title' => 'JavaScript Test Snippit',
+            'description' => 'This is a test snippit for testing JavaScript',
+            'code' => 'function test(){
+    console.log("Hello World!");
+}',
+            'user_id' => rand(1, 10),
+            'team_id' => 21,
+            'language' => 'javascript'
+        ]);
+        Snippit::factory()->create([
+            'title' => 'HTML Test Snippit',
+            'description' => 'This is a test snippit for testing HTML',
+            'code' => '<!DOCTYPE html>
+    <html>
+        <head>
+            <title>Test</title>
+        </head>
+        <body>
+            <h1>Hello World!</h1>
+        </body>
+    </html>',
+            'user_id' => rand(1, 10),
+            'team_id' => 21,
+            'language' => 'html'
+        ]);
+        Snippit::factory()->create([
+            'title' => 'PHP Test Snippit',
+            'description' => 'This is a test snippit for testing PHP',
+            'code' => '<?php
+    echo "Hello World!";
+?>',
+            'user_id' => rand(1, 10),
+            'team_id' => 21,
+            'language' => 'php'
+        ]);
+        Snippit::factory()->create([
+            'title' => 'Python Test Snippit',
+            'description' => 'This is a test snippit for testing Python',
+            'code' => 'print("Hello, Python!")
+            def greet(name):
+                print(f"Hello, {name}!")
+
+            def add_numbers(a, b):
+                return a + b
+
+            def multiply_numbers(a, b):
+                return a * b
+
+            def main():
+                name = "John"
+                result = add_numbers(5, 3)
+                print(f"The sum is: {result}")
+                product = multiply_numbers(2, 4)
+                print(f"The product is: {product}")
+                greet(name)
+
+            if __name__ == "__main__":
+                main()',
+            'user_id' => rand(1, 10),
+            'team_id' => 21,
+            'language' => 'python'
+        ]);
     }
 }

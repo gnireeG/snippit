@@ -6,6 +6,7 @@
                 <i :class="iconClass" class="text-2xl" :title="snippit.language"></i>
             </div>
             <p class="mt-2">{{ snippit.description }}</p>
+            <p class="text-sm">Lang: {{ snippit.language }} id: {{ snippit.id }} team_id: {{ snippit.team_id }} user_id: {{ snippit.user_id }}</p>
         </div>
         <div class="flex justify-between items-center mt-4 border-t dark:border-slate-600 border-slate-400 pt-4">
             <div class="flex gap-2">
@@ -24,7 +25,9 @@
             <h3 class="heading-3">{{ snippit.title }}</h3>
         </template>
         <template v-slot:content>
-            <p>{{ snippit.code }}</p>
+            <div class="bg-slate-50 text-gray-800">
+                <CodeMirror :snippit="snippit" :readonly="true" />
+            </div>
         </template>
         <template v-slot:footer>
             <Link class="textlink" :href="'#'">Edit snippit</Link>
@@ -37,12 +40,24 @@
     </DialogModal>
 </template>
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, shallowRef } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import DialogModal from '@/Components/DialogModal.vue';
+import CodeMirror from '@/Comp/CodeMirror.vue';
+import { useStore } from 'vuex';
+const store = useStore()
 const props = defineProps({
     snippit: Object
 })
+
+// function to copy code to clipboard
+const copyToClipboard = () => {
+    navigator.clipboard.writeText(props.snippit.code)
+    copied.value = true
+    setTimeout(() => {
+        copied.value = false
+    }, 2000)
+}
 
 // reactive variable to show/hide modal
 const showModal = ref(false)
@@ -55,23 +70,16 @@ const iconClass = computed(() => {
     // replace language names with devicon names if it's not the same
     const exceptions = [
         {original: 'css', replacement: 'css3'},
+        {original: 'html', replacement: 'html5'},
+        {original: 'c++', replacement: 'cplusplus'},
     ]
     let value = props.snippit.language
     const found = exceptions.find(exception => exception.original === props.snippit.language)
     if(found){
         value = found.replacement
     }
-    return `devicon-${value}-plain`
+    return `devicon-${value}-plain colored`
 })
-
-// function to copy code to clipboard
-const copyToClipboard = () => {
-    navigator.clipboard.writeText(props.snippit.code)
-    copied.value = true
-    setTimeout(() => {
-        copied.value = false
-    }, 2000)
-}
 
 const copied = ref(false)
 </script>

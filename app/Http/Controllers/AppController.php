@@ -8,7 +8,7 @@ use Inertia\Inertia;
 class AppController extends Controller
 {
     public function index(Request $request){
-        $snippits = $request->user()->currentTeam->snippits()->limit(5)->get();
+        $snippits = $request->user()->currentTeam->snippits()->get();
         return Inertia::render('App', [
             'snippits' => $snippits,
         ]);
