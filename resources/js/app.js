@@ -7,6 +7,10 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import store from './store';
 
+// monaco editor
+
+import { install as VueMonacoEditorPlugin } from '@guolao/vue-monaco-editor';
+
 // globally available components
 
 
@@ -20,6 +24,12 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(store)
+            .use(VueMonacoEditorPlugin, {
+                paths: {
+                    // The recommended CDN config
+                    vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs'
+                  },
+            })
             .mount(el);
     },
     progress: {

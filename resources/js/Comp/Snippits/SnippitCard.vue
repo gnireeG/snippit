@@ -24,7 +24,7 @@
             <h3 class="heading-3">{{ snippit.title }}</h3>
         </template>
         <template v-slot:content>
-            <p>{{ snippit.code }}</p>
+            <Codeeditor :snippit="snippit" />
         </template>
         <template v-slot:footer>
             <Link class="textlink" :href="'#'">Edit snippit</Link>
@@ -40,6 +40,7 @@
 import { computed, ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import DialogModal from '@/Components/DialogModal.vue';
+import Codeeditor from '@/Comp/Snippits/Codeeditor.vue';
 const props = defineProps({
     snippit: Object
 })
