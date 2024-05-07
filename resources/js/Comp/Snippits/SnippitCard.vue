@@ -26,7 +26,8 @@
         </template>
         <template v-slot:content>
             <div class="bg-slate-50 text-gray-800">
-                <CodeMirror :snippit="snippit" :readonly="true" />
+                <!-- <CodeMirror :snippit="snippit" :readonly="true" /> -->
+                <ShikiMonaco :snippit="snippit" @update:snippit="onUpdate($event)" />
             </div>
         </template>
         <template v-slot:footer>
@@ -43,12 +44,17 @@
 import { computed, ref, shallowRef } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import DialogModal from '@/Components/DialogModal.vue';
-import CodeMirror from '@/Comp/CodeMirror.vue';
+import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
+import ShikiMonaco from '@/Comp/Codeeditors/ShikiMonaco.vue';
 import { useStore } from 'vuex';
 const store = useStore()
 const props = defineProps({
     snippit: Object
 })
+
+function onUpdate(event){
+    console.log(event)
+}
 
 // function to copy code to clipboard
 const copyToClipboard = () => {
