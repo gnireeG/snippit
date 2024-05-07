@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\TeamsController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -20,17 +21,13 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::group(['prefix' => '/app'], function(){
-
         // Homepage
-        Route::get('/', [AppController::class, 'index'])->name('app');
+        Route::get('/app', [AppController::class, 'index'])->name('app');
 
         // Teams
         Route::group(['prefix' => '/teams'], function(){
                 
-            Route::get('/', function(){
-                return Inertia::render('App');
-            })->name('app.teams');
+            Route::get('/', [TeamsController::class, 'index'])->name('app.teams');
 
         });
 
@@ -47,6 +44,5 @@ Route::middleware([
         Route::get('/oob', function(){
             return Inertia::render('AppOob');
         });
-    });
 
 });

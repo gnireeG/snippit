@@ -1,21 +1,29 @@
 <script setup>
 import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 
+import ProfileDropdown from '@/Comp/Navigation/ProfileDropdown.vue';
+import NotificationDropdown from '@/Comp/Navigation/NotificationDropdown.vue';
+import TeamDropdown from '@/Comp/Navigation/TeamDropdown.vue';
 import Navbar from '@/Comp/Navigation/Navbar.vue';
 
 const showingNavigationDropdown = ref(false);
 
 const navOpen = ref(false);
+
+defineProps({
+    title: String,
+});
 </script>
 
 <template>
+    <Head :title="title" />
     <div class="main-grid relative" :class="[navOpen ? 'open' : '']">
+        <div class="absolute top-4 right-4 flex gap-2 items-center">
+            <team-dropdown />
+            <notification-dropdown />
+            <profile-dropdown />
+        </div>
         <header class="relative"><navbar :navopen="navOpen" @toggleMenu="navOpen = !navOpen" /></header>
         <main>
             <slot></slot>

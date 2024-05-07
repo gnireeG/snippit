@@ -18,7 +18,7 @@ import { useStore } from "vuex/types/index.js";
         <line pathLength="1" class="sun-icon" x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
       </svg>
     </button>
-    <p :class="expand ? 'opacity-100' : 'opacity-0'" class="transition-opacity whitespace-nowrap duration-500">{{ theme == 'light' ? 'Light mode' : 'Dark mode' }}</p>
+    <!-- <p :class="expand ? 'opacity-100' : 'opacity-0'" class="transition-opacity whitespace-nowrap duration-500">{{ theme == 'light' ? 'Light mode' : 'Dark mode' }}</p> -->
   </div>
 </template>
 <script setup>

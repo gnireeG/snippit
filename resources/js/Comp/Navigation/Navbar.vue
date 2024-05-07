@@ -16,10 +16,10 @@
             <div class="p-4">
                 <Darkmodetoggle :expand="navopen" />
             </div>
-            <hr class="separator">
+            <!-- <hr class="separator">
             <div class="p-4">
                 <ProfileLink :expand="navopen" />
-            </div>
+            </div> -->
         </div>
     </nav>
 </template>
