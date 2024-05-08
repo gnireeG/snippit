@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\belongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Folder extends Model
 {
@@ -31,25 +31,25 @@ class Folder extends Model
     }
 
     // Define the one-to-many relationship with Snippit
-    public function snippits(): hasMany
+    public function snippits(): HasMany
     {
         return $this->hasMany(Snippit::class);
     }
 
     // Define the self-referential relationship for subfolders
-    public function subfolders(): hasMany
+    public function subfolders(): HasMany
     {
         return $this->hasMany(Folder::class, 'parent_id');
     }
 
     // Define the inverse of the self-referential relationship
-    public function parentFolder(): belongsTo
+    public function parentFolder(): BelongsTo
     {
         return $this->belongsTo(Folder::class, 'parent_id');
     }
 
     // Define the team relationship
-    public function team(): belongsTo
+    public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);    
     }
