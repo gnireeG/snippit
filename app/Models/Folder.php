@@ -21,7 +21,7 @@ class Folder extends Model
         while ($currentFolder) {
             $path[] = [
                 'name' => $currentFolder->name,
-                'slug' => $currentFolder->slug, // Assuming you have a 'slug' attribute in your Folder model
+                'slug' => $currentFolder->slug,
             ];
 
             $currentFolder = $currentFolder->parentFolder;
