@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Team;
 use App\Models\Snippit;
+use App\Models\Folder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -97,5 +98,64 @@ class DatabaseSeeder extends Seeder
             'team_id' => 21,
             'language' => 'python'
         ]);
+
+        $teams = Team::all();
+        foreach($teams as $team){
+            Folder::create([
+                'name' => 'Root',
+                'slug' => 'root',
+                'team_id' => $team->id,
+                'root' => true
+            ]);
+        }
+
+        $snippits = Snippit::all();
+        foreach($snippits as $snippit){
+            $rootFolderId = Folder::where('team_id', $snippit->team_id)->where('root', true)->first()->id;
+            $snippit->folder_id = $rootFolderId;
+            $snippit->save();
+        }
+
+        $testRootFolder = Folder::where('team_id', 21)->where('root', true)->first();
+        $testRootFolder->subfolders()->create([
+            'name' => 'CSS',
+            'slug' => 'css',
+            'team_id' => 21
+        ]);
+        $testRootFolder->subfolders()->create([
+            'name' => 'JavaScript',
+            'slug' => 'javascript',
+            'team_id' => 21
+        ]);
+        $testRootFolder->subfolders()->create([
+            'name' => 'HTML',
+            'slug' => 'html',
+            'team_id' => 21
+        ]);
+        $testRootFolder->subfolders()->create([
+            'name' => 'PHP',
+            'slug' => 'php',
+            'team_id' => 21
+        ]);
+        $testRootFolder->subfolders()->create([
+            'name' => 'Python',
+            'slug' => 'python',
+            'team_id' => 21
+        ]);
+
+        $testTeam = Team::find(21);
+        $rootfolder = $testTeam->rootFolder();
+        $subFolders = $rootfolder->subfolders()->get();
+        foreach($subFolders as $subFolder){
+            for ($i = 0; $i < 10; $i++){
+                $subFolder->subfolders()->create([
+                    'name' => $subFolder->name.'-sub-' . $i,
+                    'slug' => $subFolder->name.'-sub-' . $i,
+                    'team_id' => 21,
+                    'parent_id' => $subFolder->id
+                ]);
+            }
+        }
+
     }
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\TeamsController;
+use App\Http\Controllers\FolderController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -38,6 +39,13 @@ Route::middleware([
                 return Inertia::render('App');
             })->name('app.snippit');
 
+        });
+
+        Route::group(['prefix' => '/folder'], function(){
+            Route::get('/', [FolderController::class, 'index'])->name('app.folders.index');
+            Route::get('/loadFolderWithContent', [FolderController::class, 'loadFolderWithContent'])->name('app.folders.loadFolderWithContent');
+            Route::get('/loadSubfoldersById', [FolderController::class, 'loadSubfoldersById'])->name('app.folders.loadSubfoldersById');
+            Route::get('/{path}', [FolderController::class, 'index'])->where('path', '.*')->name('app.folders.path');
         });
 
         // Homepage OOB

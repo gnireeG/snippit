@@ -50,4 +50,11 @@ class Team extends JetstreamTeam
     public function snippits(){
         return $this->hasMany(Snippit::class);
     }
+
+    public function folders(){
+        return $this->hasMany(Folder::class);
+    }
+    public function rootFolder(){
+        return $this->folders()->where('root', true)->first();
+    }
 }

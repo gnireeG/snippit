@@ -2,7 +2,7 @@
     <div id="editor" class="h-96"></div>
 </template>
 <script setup>
-import { ref, onMounted, defineEmits, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { getHighlighter } from 'shiki';
 import { shikiToMonaco } from '@shikijs/monaco';
 import * as monaco from 'monaco-editor-core';
@@ -57,9 +57,8 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-    console.log('tschüss')
     if (editor) {
-        editor = null;
+        editor.dispose();
     }
 });
 

@@ -44,7 +44,7 @@
 import { computed, ref, shallowRef } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import DialogModal from '@/Components/DialogModal.vue';
-import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
+//import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
 import ShikiMonaco from '@/Comp/Codeeditors/ShikiMonaco.vue';
 import { useStore } from 'vuex';
 const store = useStore()

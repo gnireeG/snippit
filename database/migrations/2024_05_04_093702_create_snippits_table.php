@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('language');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('team_id')->nullable()->constrained();
+            $table->foreignId('folder_id')->nullable()->constrained();
         });
     }
 

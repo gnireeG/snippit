@@ -19,11 +19,15 @@ class Snippit extends Model
         'team_id',
     ];
 
-    public function owner(){
+    public function owner(): BelongsTo{
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function team(){
+    public function team(): BelongsTo{
         return $this->belongsTo(Team::class);
+    }
+
+    public function folder(): BelongsTo{
+        return $this->belongsTo(Folder::class);
     }
 }

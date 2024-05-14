@@ -6,7 +6,7 @@
             </div>
             <div class="flex flex-col gap-2 mt-20">
                 <Navitem :expand="navopen" :routeName="'app'" icon="bi-house">Home</Navitem>
-                <Navitem :expand="navopen" :routeName="'app.snippit'" icon="bi-code-slash">Snippits</Navitem>
+                <Navitem :expand="navopen" :routeName="'app.folders.index'" icon="bi-code-slash">Snippits</Navitem>
                 <Navitem :expand="navopen" :routeName="'app.teams'" icon="bi-people">Teams</Navitem>
 
             </div>

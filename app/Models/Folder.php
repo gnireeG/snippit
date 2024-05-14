@@ -18,7 +18,7 @@ class Folder extends Model
 
         $currentFolder = $this;
 
-        while ($currentFolder) {
+        while ($currentFolder && !$currentFolder->root) {
             $path[] = [
                 'name' => $currentFolder->name,
                 'slug' => $currentFolder->slug,

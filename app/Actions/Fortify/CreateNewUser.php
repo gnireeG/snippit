@@ -4,6 +4,7 @@ namespace App\Actions\Fortify;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Models\Folder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -35,6 +36,7 @@ class CreateNewUser implements CreatesNewUsers
                 'password' => Hash::make($input['password']),
             ]), function (User $user) {
                 $this->createTeam($user);
+                $this->createRootFolder($user);
             });
         });
     }
@@ -48,6 +50,19 @@ class CreateNewUser implements CreatesNewUsers
             'user_id' => $user->id,
             'name' => explode(' ', $user->name, 2)[0]."'s Team",
             'personal_team' => true,
+        ]));
+    }
+    /**
+     * Create a the root folder for that team.
+     */
+    protected function createRootFolder(User $user): void
+    {
+        $personalTeam = $user->personalTeam();
+        $personalTeam->folders()->save(Folder::forceCreate([
+            'team_id' => $personalTeam->id,
+            'name' => 'Root',
+            'slug' => 'root',
+            'root' => true,
         ]));
     }
 }
