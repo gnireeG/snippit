@@ -3,47 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Folder;
 use Inertia\Inertia;
-class FolderController extends Controller
-{
-    public function index(Request $request, $path = null)
-{
-    $rootFolder = Folder::where('team_id', auth()->user()->currentTeam->id)
-        ->where('root', true)
-        ->with('subfolders')
-        ->first();
 
-    if (!$path) {
-        $rootFolder->showSubfolders = true;
-        $rootFolder->load('snippits');
-        return Inertia::render('Folders/Index', [
-            'folder' => $rootFolder,
-            'path' => $rootFolder
-        ]);
-    }
 
-    $slugs = explode('/', trim($path, '/'));
-    $currentFolder = $rootFolder;
-    $currentFolder->showSubfolders = true;
+class FolderController extends Controller {
 
-    foreach ($slugs as $slug) {
-        $currentFolder = $currentFolder->subfolders->firstWhere('slug', $slug);
+    public function index(Request $request, $path = null){
+        $rootFolder = Folder::where('team_id', auth()->user()->currentTeam->id)
+            ->where('root', true)
+            ->with('subfolders')
+            ->first();
 
-        if (!$currentFolder) {
-            abort(404);
+        if (!$path) {
+            $rootFolder->showSubfolders = true;
+            $rootFolder->load('snippits');
+            return Inertia::render('Folders/Index', [
+                'folder' => $rootFolder,
+                'path' => $rootFolder
+            ]);
         }
 
+        $slugs = explode('/', trim($path, '/'));
+        $currentFolder = $rootFolder;
         $currentFolder->showSubfolders = true;
+
+        foreach ($slugs as $slug) {
+            $currentFolder = $currentFolder->subfolders->firstWhere('slug', $slug);
+
+            if (!$currentFolder) {
+                abort(404);
+            }
+
+            $currentFolder->showSubfolders = true;
+        }
+
+        $currentFolder->load('snippits', 'subfolders');
+
+        return Inertia::render('Folders/Index', [
+            'folder' => $currentFolder,
+            'path' => $rootFolder,
+            'simplePath' => $currentFolder->getPath()
+        ]);
     }
-
-    $currentFolder->load('snippits', 'subfolders');
-
-    return Inertia::render('Folders/Index', [
-        'folder' => $currentFolder,
-        'path' => $rootFolder
-    ]);
-}
 
     public function loadSubfoldersById(Request $request){
         $validated = $request->validate([
@@ -62,29 +65,59 @@ class FolderController extends Controller
         return response()->json(['folder' => $folder, 'path' => $path]);
     }
 
-    public function indexByPath($path)
-{
-    $slugs = explode('/', trim($path, '/'));
-
-    $folderQuery = Folder::query();
-
-    foreach ($slugs as $index => $slug) {
-        $folderQuery->whereHas('parentFolder', function ($query) use ($slug, $index) {
-            $query->where('slug', $slug);
-
-            if ($index === 0) {
-                $query->where('root', true);
-            }
-        });
+    public function loadRootFolder(Request $request){
+        $rootFolder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('root', true)->with('snippits')->first();
+        return response()->json($rootFolder);
     }
 
-    $folder = $folderQuery->where('team_id', auth()->user()->currentTeam->id)
-        ->with('snippits')
-        ->with('subfolders')
-        ->first();
-    dd($folder);
-    return Inertia::render('Folders/Index', [
-        'folder' => $folder
-    ]);
-}
+    public function indexByPath($path){
+        $slugs = explode('/', trim($path, '/'));
+
+        $folderQuery = Folder::query();
+
+        foreach ($slugs as $index => $slug) {
+            $folderQuery->whereHas('parentFolder', function ($query) use ($slug, $index) {
+                $query->where('slug', $slug);
+
+                if ($index === 0) {
+                    $query->where('root', true);
+                }
+            });
+        }
+
+        $folder = $folderQuery->where('team_id', auth()->user()->currentTeam->id)
+            ->with('snippits')
+            ->with('subfolders')
+            ->first();
+        dd($folder);
+        return Inertia::render('Folders/Index', [
+            'folder' => $folder
+        ]);
+    }
+
+    public function create(Request $request){
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'parent_id' => 'required|integer'
+        ]);
+
+        $duplicates = Folder::where('team_id', auth()->user()->currentTeam->id)
+            ->where('parent_id', $validated['parent_id'])
+            ->where('name', $validated['name'])
+            ->count();
+
+        // if there are duplicates, return an error message
+        if ($duplicates > 0) {
+            return response()->json(['message' => 'Folder already exists'], 422);
+        }
+
+        $folder = new Folder();
+        $folder->name = $validated['name'];
+        $folder->slug = Str::slug($validated['name']);
+        $folder->team_id = auth()->user()->currentTeam->id;
+        $folder->parent_id = $validated['parent_id'];
+        $folder->save();
+
+        return response()->json($folder);
+    }
 }

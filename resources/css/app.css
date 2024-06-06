@@ -26,6 +26,16 @@
 .btn.btn-icon{
     @apply rounded-full w-8 h-8 flex items-center justify-center ;
 }
+
+.btn.btn-transparent{
+    @apply bg-transparent dark:text-gray-200 text-slate-800;
+}
+.bg-primary .btn.btn-transparent:hover{
+    @apply dark:bg-slate-900 bg-gray-300;
+}
+.bg-secondary .btn.btn-transparent:hover{
+    @apply dark:bg-slate-800 bg-gray-200;
+}
 .btn:hover{
     @apply bg-slate-800 dark:bg-gray-400;
 }
@@ -51,9 +61,23 @@
 .bg-primary{
     @apply dark:bg-slate-800 dark:text-gray-300 bg-slate-50 text-gray-800;
 }
+.bg-primary-inverted{
+    @apply dark:bg-slate-50 dark:text-gray-800 bg-slate-800 text-gray-300;
+}
+
+.bg-primary.hover{
+    @apply dark:hover:bg-slate-900 hover:bg-slate-100;
+}
 
 .bg-secondary{
     @apply dark:bg-slate-900 dark:text-gray-300 bg-slate-100 text-gray-800;
+}
+.bg-secondary-inverted{
+    @apply dark:bg-slate-100 dark:text-gray-800 bg-slate-900 text-gray-300;
+}
+
+.bg-secondary.hover{
+    @apply dark:hover:bg-slate-800 hover:bg-slate-200;
 }
 
 /* HEADINGS */

@@ -45,7 +45,9 @@ Route::middleware([
             Route::get('/', [FolderController::class, 'index'])->name('app.folders.index');
             Route::get('/loadFolderWithContent', [FolderController::class, 'loadFolderWithContent'])->name('app.folders.loadFolderWithContent');
             Route::get('/loadSubfoldersById', [FolderController::class, 'loadSubfoldersById'])->name('app.folders.loadSubfoldersById');
+            Route::get('loadRootFolder', [FolderController::class, 'loadRootFolder'])->name('app.folders.loadRootFolder');
             Route::get('/{path}', [FolderController::class, 'index'])->where('path', '.*')->name('app.folders.path');
+            Route::post('/create', [FolderController::class, 'create'])->name('app.folders.create');
         });
 
         // Homepage OOB

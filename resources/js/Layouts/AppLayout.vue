@@ -6,7 +6,7 @@ import ProfileDropdown from '@/Comp/Navigation/ProfileDropdown.vue';
 import NotificationDropdown from '@/Comp/Navigation/NotificationDropdown.vue';
 import TeamDropdown from '@/Comp/Navigation/TeamDropdown.vue';
 import Navbar from '@/Comp/Navigation/Navbar.vue';
-
+import Alert from '@/Comp/Alert.vue';
 const showingNavigationDropdown = ref(false);
 
 const navOpen = ref(false);
@@ -28,6 +28,7 @@ defineProps({
         <main>
             <slot></slot>
         </main>
+        <alert />
     </div>
 </template>
 <style scoped>

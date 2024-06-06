@@ -53,7 +53,7 @@ const props = defineProps({
 })
 
 function onUpdate(event){
-    console.log(event)
+    
 }
 
 // function to copy code to clipboard
