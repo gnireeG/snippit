@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
-
+import { config as loadEnv } from 'dotenv';
+loadEnv()
 export default defineConfig({
     plugins: [
         laravel({
@@ -17,4 +18,7 @@ export default defineConfig({
             },
         }),
     ],
+    server: {
+        host: process.env.VITE_SERVER_HOST || 'localhost'
+    }
 });

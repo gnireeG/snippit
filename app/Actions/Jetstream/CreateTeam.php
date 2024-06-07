@@ -32,6 +32,12 @@ class CreateTeam implements CreatesTeams
             'personal_team' => false,
         ]));
 
+        $team->folders()->create([
+            'name' => 'Root',
+            'root' => true,
+            'slug' => 'root',
+        ]);
+
         return $team;
     }
 }

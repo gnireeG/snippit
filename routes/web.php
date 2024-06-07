@@ -48,6 +48,7 @@ Route::middleware([
             Route::get('loadRootFolder', [FolderController::class, 'loadRootFolder'])->name('app.folders.loadRootFolder');
             Route::get('/{path}', [FolderController::class, 'index'])->where('path', '.*')->name('app.folders.path');
             Route::post('/create', [FolderController::class, 'create'])->name('app.folders.create');
+            Route::delete('/delete', [FolderController::class, 'delete'])->name('app.folders.delete');
         });
 
         // Homepage OOB

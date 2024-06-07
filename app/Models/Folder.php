@@ -8,9 +8,21 @@ use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use Illuminate\Database\Eloquent\Builder;
+
+
 class Folder extends Model
 {
-    protected $fillable = ['name', 'parent_id', 'team_id', 'slug'];
+    protected $fillable = ['name', 'parent_id', 'team_id', 'slug', 'root'];
+
+    protected static function boot(){
+        parent::boot();
+
+        // Order by name ASC
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('name', 'asc');
+        });
+    }
 
     public function getPath()
     {

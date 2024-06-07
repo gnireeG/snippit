@@ -157,8 +157,8 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // create 5000 users, each with a personal team. each personal team has a root folder. each root folder has 5 subfolders. each subfolder has 5 snippits and 10 subfolders
-        User::factory(5000)->withPersonalTeam()->withRootFolder()->withSubfolders()->create();
+        // create 50 users, each with a personal team. each personal team has a root folder. each root folder has 5 subfolders. each subfolder has 5 snippits and 10 subfolders
+        User::factory(50)->withPersonalTeam()->withRootFolder()->withSubfolders()->create();
         $users = User::all();
         foreach($users as $user){
             $rootFolder = $user->currentTeam->rootFolder();

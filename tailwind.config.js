@@ -21,5 +21,10 @@ export default {
     },
 
     plugins: [forms, typography],
-    darkMode: 'selector'
+    darkMode: 'selector',
+    variants: {
+        extend: {
+          opacity: ['group-hover'],
+        },
+      },
 };

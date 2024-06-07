@@ -13,10 +13,12 @@
                 <button class="btn btn-icon" title="Preview Code" @click="openPreview">
                     <i class="bi bi-eye"></i>
                 </button>
-                <button class="btn btn-icon" title="Copy Code to clipboard" @click="copyToClipboard">
-                    <i v-if="!copied" class="bi bi-copy"></i>
-                    <i v-else class="bi bi-clipboard-check"></i>
-                </button>
+                <template v-if="clipBoardAllowed">
+                    <button class="btn btn-icon" title="Copy Code to clipboard" @click="copyToClipboard">
+                        <i v-if="!copied" class="bi bi-copy"></i>
+                        <i v-else class="bi bi-clipboard-check"></i>
+                    </button>
+                </template>
             </div>
         </div>
     </div>
@@ -32,11 +34,13 @@
         </template>
         <template v-slot:footer>
             <Link class="textlink" :href="'#'">Edit snippit</Link>
-            <button class="btn btn-icon" title="Copy Code to clipboard" @click="copyToClipboard">
-                    <i v-if="!copied" class="bi bi-copy"></i>
-                    <i v-else class="bi bi-clipboard-check"></i>
-                </button>
-            <!-- <button class="btn" @click="showModal = false">Close</button> -->
+            <template v-if="clipBoardAllowed">
+                <button class="btn btn-icon" title="Copy Code to clipboard" @click="copyToClipboard">
+                        <i v-if="!copied" class="bi bi-copy"></i>
+                        <i v-else class="bi bi-clipboard-check"></i>
+                    </button>
+                <!-- <button class="btn" @click="showModal = false">Close</button> -->
+            </template>
         </template>
     </DialogModal>
 </template>
@@ -55,6 +59,11 @@ const props = defineProps({
 function onUpdate(event){
     
 }
+
+// computed property to check if the user is allowed to copy code to clipboard
+const clipBoardAllowed = computed(() => {
+    return navigator.clipboard ? true : false
+})
 
 // function to copy code to clipboard
 const copyToClipboard = () => {

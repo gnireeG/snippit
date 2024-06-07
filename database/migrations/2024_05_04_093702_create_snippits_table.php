@@ -19,8 +19,8 @@ return new class extends Migration
             $table->text('code');
             $table->string('language');
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('team_id')->nullable()->constrained();
-            $table->foreignId('folder_id')->nullable()->constrained();
+            $table->foreignId('team_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('folder_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 

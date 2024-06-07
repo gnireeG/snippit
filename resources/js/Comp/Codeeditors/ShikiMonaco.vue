@@ -34,6 +34,8 @@ self.MonacoEnvironment = {
     }
 };
 
+let editor;
+
 onMounted(async () => {
     const highlighter = await getHighlighter({
         themes: ['github-dark', 'github-light'],

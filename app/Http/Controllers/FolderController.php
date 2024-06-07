@@ -41,6 +41,8 @@ class FolderController extends Controller {
 
         $currentFolder->load('snippits', 'subfolders');
 
+        //dd($rootFolder->toArray());
+
         return Inertia::render('Folders/Index', [
             'folder' => $currentFolder,
             'path' => $rootFolder,
@@ -119,5 +121,17 @@ class FolderController extends Controller {
         $folder->save();
 
         return response()->json($folder);
+    }
+
+    public function delete(Request $request){
+        $validated = $request->validate([
+            'folder_id' => 'required|integer'
+        ]);
+        $folder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('id', $validated['folder_id'])->first();
+        $deletedFolder = $folder->toArray();
+        $folderName = $folder->name;
+        $folder->delete();
+
+        return response()->json(['message' => 'Folder '.$folderName.' deleted', 'deleted_folder' => $deletedFolder]);
     }
 }

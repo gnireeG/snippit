@@ -42,6 +42,9 @@
 .btn:active{
     @apply scale-90;
 }
+.btn.btn-danger{
+    @apply bg-red-500 text-gray-50 hover:bg-red-600;
+}
 
 .textlink::after{
     content: "";
