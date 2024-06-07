@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import { Head } from '@inertiajs/vue3';
-
+import { onMounted, ref, watch } from 'vue';
+import { Head, router } from '@inertiajs/vue3';
+import MobileHeader from '@/Comp/Navigation/MobileHeader.vue';
 import ProfileDropdown from '@/Comp/Navigation/ProfileDropdown.vue';
 import NotificationDropdown from '@/Comp/Navigation/NotificationDropdown.vue';
 import TeamDropdown from '@/Comp/Navigation/TeamDropdown.vue';
@@ -11,31 +11,62 @@ const showingNavigationDropdown = ref(false);
 
 const navOpen = ref(false);
 
+watch(navOpen, (value) => {
+    if(value){
+        document.body.classList.add('overflow-hidden')
+        document.body.classList.add('md:overflow-auto')
+    } else{
+        document.body.classList.remove('overflow-hidden')
+        document.body.classList.remove('md:overflow-auto')
+    }
+})
+
 defineProps({
     title: String,
 });
+
+onMounted(() =>{
+    document.body.classList.remove('overflow-hidden')
+    document.body.classList.remove('md:overflow-auto')
+})
+
+router.on('finish', () =>{
+    document.body.classList.remove('overflow-hidden')
+    document.body.classList.remove('md:overflow-auto')
+})
 </script>
 
 <template>
     <Head :title="title" />
     <div class="main-grid relative" :class="[navOpen ? 'open' : '']">
-        <div class="absolute top-4 right-4 flex gap-2 items-center">
+        <div class="absolute top-4 right-4 gap-2 items-center hidden md:flex">
             <team-dropdown />
             <notification-dropdown />
             <profile-dropdown />
         </div>
-        <header class="relative"><navbar :navopen="navOpen" @toggleMenu="navOpen = !navOpen" /></header>
-        <main>
+        <header class="relative hidden md:block">
+            <navbar :navopen="navOpen" @toggleMenu="navOpen = !navOpen" />
+        </header>
+        <!-- MOBILE -->
+        <header class="md:hidden">
+            <MobileHeader :navopen="navOpen" @toggleMenu="navOpen = !navOpen" />
+            <navbar :navopen="navOpen" @toggleMenu="navOpen = !navOpen"/>
+        </header>
+        <!--    -->
+        <main class="pt-12 md:pt-0">
             <slot></slot>
         </main>
         <alert />
     </div>
 </template>
 <style scoped>
-.main-grid{
-    display: grid;
-    grid-template-columns: 68px auto;
-    transition: grid-template-columns 0.5s;
+
+@media (min-width: 768px) {
+    .main-grid{
+        display: grid;
+        grid-template-columns: 68px auto;
+        transition: grid-template-columns 0.5s;
+    }
 }
 
 .main-grid.open{

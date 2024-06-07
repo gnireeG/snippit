@@ -26,6 +26,9 @@
 .btn.btn-icon{
     @apply rounded-full w-8 h-8 flex items-center justify-center ;
 }
+.btn.btn-icon.btn-lg{
+    @apply w-10 h-10 text-xl;
+}
 
 .btn.btn-transparent{
     @apply bg-transparent dark:text-gray-200 text-slate-800;

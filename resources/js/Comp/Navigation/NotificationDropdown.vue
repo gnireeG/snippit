@@ -1,7 +1,7 @@
 <template>
     <Dropdown align="right" width="48">
         <template #trigger>
-            <button title="Open Notifications" class="btn btn-icon"><i class="bi bi-bell"></i></button>
+            <button title="Open Notifications" class="btn btn-icon btn-transparent btn-lg"><i class="bi bi-bell"></i></button>
         </template>
         <template #content>
             <div class="p-4">

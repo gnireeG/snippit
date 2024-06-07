@@ -22,6 +22,7 @@
                 </tbody>
             </table>
             <p>{{ otherTeams }}</p>
+            <p v-for="item in 1000">test {{ item }}</p>
         </div>
     </AppLayout>
 </template>
