@@ -63,8 +63,11 @@ const store = createStore({
             parent.subfolders.push(data.folder)
         },
         deleteFolder(state, data){
-            let parent = state.findFolderById(data.parent_id)
-            parent.subfolders.splice(parent.subfolders.indexOf(data.id), 1)
+            let parent = state.findFolderById(data.parent_id);
+            let index = parent.subfolders.findIndex(folder => folder.id === data.id);
+            if (index !== -1) {
+                parent.subfolders.splice(index, 1);
+            }
         }
     },
     getters: {
@@ -81,6 +84,7 @@ const store = createStore({
                         if (subPath) return subPath;
                     }
                 }
+                return null
             }
             return buildPath(state.path, state.currentFolder.id);
         }

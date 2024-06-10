@@ -140,8 +140,13 @@ function openFolder(folder){
     http.get(route('app.folders.loadFolderWithContent', {folderId: folder.id}))
         .then(response => {
             let path = '/folder/'
-            response.data.path.forEach(folder => {
-                path += folder.slug + '/'
+            response.data.path.forEach((folder, i) => {
+                //dont add the slash on the end
+                if(i < response.data.path.length - 1){
+                    path += folder.slug + '/'
+                } else{
+                    path += folder.slug
+                }
             })
             window.history.pushState({}, '', path)
             store.commit('updateCurrentFolder', response.data.folder)
