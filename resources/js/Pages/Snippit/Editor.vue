@@ -13,7 +13,8 @@
                     </p>
                 </div>
                 <div class="bg-secondary rounded-md shadow-md flex-grow editor-container overflow-hidden p-4">
-                    <ShikiMonaco :snippit="form" @update:snippit="onUpdate($event)" />
+                    <!-- <ShikiMonaco :snippit="form" @update:snippit="onUpdate($event)" /> -->
+                    <CodeMirror @updateCode="onUpdate($event)" :snippit="form" />
                 </div>
             </div>
         </div>
@@ -23,7 +24,8 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { onMounted, reactive, ref } from 'vue';
-import ShikiMonaco from '@/Comp/Codeeditors/ShikiMonaco.vue';
+//import ShikiMonaco from '@/Comp/Codeeditors/ShikiMonaco.vue';
+import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
 import InputComponent from '@/Comp/Form/InputComponent.vue';
 import InputSearch from '@/Comp/Form/InputSearch.vue';
 function onUpdate(event){
@@ -50,7 +52,7 @@ const form = reactive({
     title: '',
     description: '',
     code: '',
-    language: 'css',
+    language: 'php',
     folder_id: null
 })
 
@@ -59,23 +61,25 @@ const langChoices = ref([
     { id: 'php', name: 'PHP' },
     { id: 'html', name: 'HTML' },
     { id: 'css', name: 'CSS' },
-    { id: 'scss', name: 'SCSS' },
     { id: 'python', name: 'Python' },
     { id: 'java', name: 'Java' },
-    { id: 'csharp', name: 'C#' },
-    { id: 'c', name: 'C' },
     { id: 'cpp', name: 'C++' },
-    { id: 'ruby', name: 'Ruby' },
     { id: 'go', name: 'Go' },
-    { id: 'swift', name: 'Swift' },
-    { id: 'kotlin', name: 'Kotlin' },
     { id: 'rust', name: 'Rust' },
-    { id: 'typescript', name: 'TypeScript' },
-    { id: 'dart', name: 'Dart' },
-    { id: 'shell', name: 'Shell' },
-    { id: 'powershell', name: 'PowerShell' },
-    { id: 'plaintext', name: 'Plain Text'}
-])
+    { id: 'json', name: 'JSON' },
+    { id: 'xml', name: 'XML' },
+    { id: 'markdown', name: 'Markdown' },
+    { id: 'sql', name: 'SQL' },
+    { id: 'yaml', name: 'YAML' },
+    { id: 'liquid', name: 'Liquid' },
+    { id: 'less', name: 'Less' },
+    { id: 'vue', name: 'Vue' },
+    { id: 'sass', name: 'Sass' },
+    { id: 'angular', name: 'Angular' },
+    { id: 'lezer', name: 'Lezer' },
+    { id: 'wast', name: 'Wast' },
+    { id: 'plaintext', name: 'Plaintext'}
+].sort((a, b) => a.name.localeCompare(b.name)))
 
 function changeLanguage(language){
     form.language = language.id

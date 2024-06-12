@@ -53,6 +53,9 @@ watch(() => props.snippit.language, () => {
 });
 
 async function createEditor() {
+    if(editor){
+        editor.dispose();
+    }
     let localLang = props.snippit.language;
     if(!localLang){
         localLang = 'plaintext';
