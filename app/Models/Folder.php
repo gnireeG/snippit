@@ -24,21 +24,21 @@ class Folder extends Model
         });
     }
 
-    public function getPath()
+    public function getPath($withRoot = false)
     {
         $path = [];
-
+    
         $currentFolder = $this;
-
-        while ($currentFolder && !$currentFolder->root) {
+    
+        while ($currentFolder && ($withRoot || !$currentFolder->root)) {
             $path[] = [
                 'name' => $currentFolder->name,
                 'slug' => $currentFolder->slug,
             ];
-
+    
             $currentFolder = $currentFolder->parentFolder;
         }
-
+    
         return array_reverse($path);
     }
 

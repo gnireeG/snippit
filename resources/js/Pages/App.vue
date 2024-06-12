@@ -9,7 +9,7 @@ const props = defineProps({
 
 <template>
     <AppLayout title="Snippit App">
-        <div class="p-8">
+        <div>
             <h1 class="heading-1">Hello {{ $page.props.auth.user.name }}</h1>
             <p class="text-lg mt-2">You are currently in the <b class="italic">{{ $page.props.auth.user.current_team.name }}</b> team!</p>
             <div class="mt-8 autogrid gap-4">

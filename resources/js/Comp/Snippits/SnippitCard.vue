@@ -27,7 +27,7 @@
             <h3 class="heading-3">{{ snippit.title }}</h3>
         </template>
         <template v-slot:content>
-            <div class="bg-slate-50 text-gray-800">
+            <div class="bg-slate-50 text-gray-800 h-[75vh]">
                 <!-- <CodeMirror :snippit="snippit" :readonly="true" /> -->
                 <ShikiMonaco :snippit="snippit" @update:snippit="onUpdate($event)" />
             </div>

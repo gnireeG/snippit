@@ -53,7 +53,7 @@ router.on('finish', () =>{
             <navbar :navopen="navOpen" @toggleMenu="navOpen = !navOpen"/>
         </header>
         <!--    -->
-        <main class="pt-12 md:pt-0">
+        <main class="pt-20 md:pt-12 px-2 md:px-4 lg:px-8 overflow-x-hidden">
             <slot></slot>
         </main>
         <alert />

@@ -1,8 +1,9 @@
 <template>
-    <div id="editor" class="h-96"></div>
+    <div id="editor" class="h-full w-full"></div>
 </template>
+
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watchEffect, watch } from 'vue';
 import { getHighlighter } from 'shiki';
 import { shikiToMonaco } from '@shikijs/monaco';
 import * as monaco from 'monaco-editor-core';
@@ -34,29 +35,60 @@ self.MonacoEnvironment = {
     }
 };
 
+let highlighter;
 let editor;
 
 onMounted(async () => {
-    const highlighter = await getHighlighter({
-        themes: ['github-dark', 'github-light'],
-        langs: [props.snippit.language],
-    });
+    createEditor();
+});
 
-    monaco.languages.register({ id: props.snippit.language });
+watch(() => props.snippit.language, () => {
+    if (editor) {
+        // Dispose the old editor
+        editor.dispose();
+
+        // Create a new editor with the new language
+        createEditor();
+    }
+});
+
+async function createEditor() {
+    let localLang = props.snippit.language;
+    if(!localLang){
+        localLang = 'plaintext';
+    }
+    
+    highlighter = await getHighlighter({
+        themes: ['github-dark', 'github-light'],
+        langs: [localLang],
+    });
+    monaco.languages.register({ id: localLang });
 
     shikiToMonaco(highlighter, monaco);
 
     editor = monaco.editor.create(document.querySelector('#editor'), {
         value: props.snippit.code,
-        language: props.snippit.language,
+        language: localLang,
         theme: store.state.theme === 'dark' ? 'github-dark' : 'github-light',
-        readOnly: props.readonly
+        readOnly: props.readonly,
+        automaticLayout: true,
+        autoIndent: 'full',
+        matchBrackets: 'always'
     });
 
+    monaco.editor.setModelLanguage(editor.getModel(), localLang);
+
     editor.onDidChangeModelContent(() => {
-        emit('update:snippit', { code: editor.getValue(), language: props.snippit.language });
+        emit('update:snippit', { code: editor.getValue(), language: localLang });
     });
-});
+}
+
+
+watchEffect(( )=>{
+    if(editor){
+        editor.layout()
+    }
+})
 
 onBeforeUnmount(() => {
     if (editor) {

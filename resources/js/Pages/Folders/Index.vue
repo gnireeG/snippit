@@ -1,11 +1,12 @@
 <script setup>
 import { onMounted, ref, computed, reactive } from 'vue';
+import { Link } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import FolderSelector from '@/Comp/Snippits/FolderSelector.vue';
 import SnippitCard from '@/Comp/Snippits/SnippitCard.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DialogModal from '@/Components/DialogModal.vue';
-import InputText from '@/Comp/Form/InputText.vue';
+import InputText from '@/Comp/Form/InputComponent.vue';
 import FolderBreadcrumbs from '@/Comp/Snippits/FolderBreadcrumbs.vue';
 import http from '@/http';
 import { useStore } from 'vuex';
@@ -43,14 +44,14 @@ function submitNewFolder(){
 
 <template>
     <AppLayout title="Folders">
-        <div class="p-8">
-            <div class="flex gap-4 relative mt-8">
+        <div>
+            <div class="flex gap-4 relative flex-col md:flex-row">
                 <div class="min-w-64 flex-grow">
-                    <div class="top-0 sticky">
+                    <div class="top-0 sticky max-h-48 md:max-h-none overflow-y-auto">
                         <FolderSelector v-if="store.state.path" :root="true" :folders="store.state.path.subfolders" />
                     </div>
                 </div>
-                <div class="w-full">
+                <div class="w-full mt-8">
                     <div class="flex justify-between">
                         <div>
                             <p class="text-sm mb-2">
@@ -65,7 +66,7 @@ function submitNewFolder(){
                             </template>
                             <template #content>
                                 <div class="rounded-lg p-2">
-                                    <button class="btn btn-transparent w-full"><i class="bi bi-code-slash"></i>&nbsp;Snippit</button>
+                                    <Link v-if="store.state.currentFolder" :href="route('app.snippit.showCreate') + '?folder_id=' + store.state.currentFolder.id" class="btn btn-transparent w-full block text-center"><i class="bi bi-code-slash"></i>&nbsp;Snippit</Link>
                                     <button class="btn btn-transparent w-full" @click="newFolderModal = true"><i class="bi bi-folder"></i>&nbsp;Folder</button>
                                 </div>
                             </template>

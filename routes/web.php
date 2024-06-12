@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\TeamsController;
 use App\Http\Controllers\FolderController;
+use App\Http\Controllers\SnippitController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -49,6 +50,10 @@ Route::middleware([
             Route::get('/{path}', [FolderController::class, 'index'])->where('path', '.*')->name('app.folders.path');
             Route::post('/create', [FolderController::class, 'create'])->name('app.folders.create');
             Route::delete('/delete', [FolderController::class, 'delete'])->name('app.folders.delete');
+        });
+
+        Route::group(['prefix' => '/snippit'], function(){
+            Route::get('/create', [SnippitController::class, 'showCreate'])->name('app.snippit.showCreate');
         });
 
         // Homepage OOB

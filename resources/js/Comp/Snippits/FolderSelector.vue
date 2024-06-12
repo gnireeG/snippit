@@ -10,7 +10,7 @@
                     <button :title="folder.name" @click="openFolder(folder)" class="w-full text-left truncate">{{ folder.name }}</button>
                     <Dropdown align="right" width="28" class="opacity-0 group-hover:opacity-100">
                         <template #trigger>
-                            <button title="Options"><i class="bi bi-three-dots"></i></button>
+                            <button title="Options" class="px-1"><i class="bi bi-three-dots"></i></button>
                         </template>
                         <template #content>
                             <div class="rounded-lg p-2 flex">

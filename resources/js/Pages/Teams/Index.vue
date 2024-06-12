@@ -1,6 +1,6 @@
 <template>
     <AppLayout title="Teams">
-        <div class="p-8">
+        <div>
             <h1 class="heading-1">Teams</h1>
             <p class="text-lg mt-2">Current team: <b class="italic">{{ $page.props.auth.user.current_team.name }}</b></p>
             <table>
