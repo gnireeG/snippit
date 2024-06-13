@@ -54,6 +54,10 @@ Route::middleware([
 
         Route::group(['prefix' => '/snippit'], function(){
             Route::get('/create', [SnippitController::class, 'showCreate'])->name('app.snippit.showCreate');
+            Route::get('/edit/{id}', [SnippitController::class, 'showEdit'])->name('app.snippit.showEdit');
+            Route::post('/store', [SnippitController::class, 'store'])->name('app.snippit.store');
+            Route::post('/update', [SnippitController::class, 'update'])->name('app.snippit.update');
+            Route::post('/move', [SnippitController::class, 'move'])->name('app.snippit.move');
         });
 
         // Homepage OOB

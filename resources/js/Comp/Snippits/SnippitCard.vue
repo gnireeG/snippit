@@ -1,13 +1,12 @@
 <template>
-    <div class="bg-secondary rounded-lg px-4 py-3 flex flex-col jusitfy-between shadow-lg">
-        <div class="h-full">
+    <div class="bg-secondary rounded-lg px-4 py-3 flex flex-col jusitfy-between shadow-lg snippit-card">
+        <Link :href="route('app.snippit.showEdit', {id: snippit.id})" class="h-full">
             <div class="flex justify-between">
                 <h3 class="heading-3">{{ snippit.title }}</h3>
-                <i :class="iconClass" class="text-2xl" :title="snippit.language"></i>
+                <i :class="iconClass" class="text-2xl devicon" :title="snippit.language"></i>
             </div>
             <p class="mt-2">{{ snippit.description }}</p>
-            <p class="text-sm">Lang: {{ snippit.language }} id: {{ snippit.id }} team_id: {{ snippit.team_id }} user_id: {{ snippit.user_id }}</p>
-        </div>
+        </Link>
         <div class="flex justify-between items-center mt-4 border-t dark:border-slate-600 border-slate-400 pt-4">
             <div class="flex gap-2">
                 <button class="btn btn-icon" title="Preview Code" @click="openPreview">
@@ -20,6 +19,7 @@
                     </button>
                 </template>
             </div>
+            <div title="Move Snippit to another folder" :class="[draggable ? 'cursor-move' : '']" :draggable="draggable" @dragstart="handleDragStart" v-if="draggable"><i class="bi bi-folder-symlink"></i></div>
         </div>
     </div>
     <DialogModal :show="showModal" @close="showModal = false" maxWidth="4xl">
@@ -28,12 +28,12 @@
         </template>
         <template v-slot:content>
             <div class="bg-slate-50 text-gray-800 h-[75vh]">
-                <!-- <CodeMirror :snippit="snippit" :readonly="true" /> -->
-                <ShikiMonaco :snippit="snippit" @update:snippit="onUpdate($event)" />
+                <CodeMirror :snippit="snippit" :readonly="true" />
+                <!-- <ShikiMonaco :snippit="snippit" @update:snippit="onUpdate($event)" /> -->
             </div>
         </template>
         <template v-slot:footer>
-            <Link class="textlink" :href="'#'">Edit snippit</Link>
+            <Link class="textlink" :href="route('app.snippit.showEdit', {id: snippit.id})">Edit snippit</Link>
             <template v-if="clipBoardAllowed">
                 <button class="btn btn-icon" title="Copy Code to clipboard" @click="copyToClipboard">
                         <i v-if="!copied" class="bi bi-copy"></i>
@@ -48,16 +48,43 @@
 import { computed, ref, shallowRef } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import DialogModal from '@/Components/DialogModal.vue';
-//import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
-import ShikiMonaco from '@/Comp/Codeeditors/ShikiMonaco.vue';
+import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
+//import ShikiMonaco from '@/Comp/Codeeditors/ShikiMonaco.vue';
 import { useStore } from 'vuex';
 const store = useStore()
 const props = defineProps({
-    snippit: Object
+    snippit: Object,
+    draggable: {
+        type: Boolean,
+        default: false
+    }
 })
 
 function onUpdate(event){
     
+}
+
+function handleDragStart(e){
+    e.dataTransfer.setData('event', 'moveSnippit')
+    e.dataTransfer.setData('snippitId', props.snippit.id)
+    // Get the card element
+    let card = e.target.closest('.snippit-card');
+
+    // Create a ghostImage of the card
+    let ghostImage = card.querySelector('.devicon').cloneNode(true);
+    
+    document.body.appendChild(ghostImage);
+    ghostImage.style.position = 'fixed';
+    ghostImage.style.width = `${ghostImage.offsetWidth}px`;
+    ghostImage.style.height = `${ghostImage.offsetHeight}px`;
+    e.dataTransfer.setDragImage(ghostImage, 5, 5);
+
+    // Remove the ghostImage from the body after the drag ends
+    e.dataTransfer.onend = function() {
+      document.body.removeChild(ghostImage);
+      e.target.style.opacity = '';
+      card.style.opacity = '1'
+    };
 }
 
 // computed property to check if the user is allowed to copy code to clipboard

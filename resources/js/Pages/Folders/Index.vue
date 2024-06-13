@@ -40,14 +40,17 @@ function submitNewFolder(){
     newFolderName.value = '';
 
 }
+
+
+// FIXME: Mobile Layout
 </script>
 
 <template>
     <AppLayout title="Folders">
         <div>
             <div class="flex gap-4 relative flex-col md:flex-row">
-                <div class="min-w-64 flex-grow">
-                    <div class="top-0 sticky max-h-48 md:max-h-none overflow-y-auto">
+                <div class="min-w-64 flex-grow relative">
+                    <div class="top-0 sticky max-h-48 md:max-h-none overflow-y-auto md:overflow-y-visible pb-10 md:pb-0">
                         <FolderSelector v-if="store.state.path" :root="true" :folders="store.state.path.subfolders" />
                     </div>
                 </div>
@@ -75,7 +78,7 @@ function submitNewFolder(){
                     <div class="autogrid gap-4 w-full mt-4">
                         <template v-if="store.state.currentFolder">
                             <template v-for="snippit in store.state.currentFolder.snippits">
-                                <SnippitCard :snippit="snippit" />
+                                <SnippitCard :snippit="snippit" :draggable="true" />
                             </template>
                         </template>
                     </div>

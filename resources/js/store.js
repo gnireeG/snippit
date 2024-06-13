@@ -68,6 +68,12 @@ const store = createStore({
             if (index !== -1) {
                 parent.subfolders.splice(index, 1);
             }
+        },
+        removeSnippit(state, data){
+            let index = state.currentFolder.snippits.findIndex(snippit => snippit.id == data.snippitId)
+            if (index !== -1) {
+                state.currentFolder.snippits.splice(index, 1);
+            }
         }
     },
     getters: {

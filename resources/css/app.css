@@ -76,7 +76,7 @@
 }
 
 .bg-secondary{
-    @apply dark:bg-slate-900 dark:text-gray-300 bg-slate-200 text-gray-800;
+    @apply dark:bg-slate-900 dark:text-gray-300 bg-slate-100 text-gray-800;
 }
 .bg-secondary-inverted{
     @apply dark:bg-slate-100 dark:text-gray-800 bg-slate-900 text-gray-300;

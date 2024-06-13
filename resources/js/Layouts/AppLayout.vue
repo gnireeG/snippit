@@ -1,15 +1,26 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { onMounted, ref, watch, watchEffect } from 'vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import MobileHeader from '@/Comp/Navigation/MobileHeader.vue';
 import ProfileDropdown from '@/Comp/Navigation/ProfileDropdown.vue';
 import NotificationDropdown from '@/Comp/Navigation/NotificationDropdown.vue';
 import TeamDropdown from '@/Comp/Navigation/TeamDropdown.vue';
 import Navbar from '@/Comp/Navigation/Navbar.vue';
 import Alert from '@/Comp/Alert.vue';
+import { useStore } from 'vuex'
+
+const store = useStore();
 const showingNavigationDropdown = ref(false);
 
 const navOpen = ref(false);
+
+watchEffect(() =>{
+    const { flash } = usePage().props
+    if(flash.alert){
+        store.commit('addAlert', flash.alert)
+    }
+    //store.commit('addAlert', {type: 'Success'})
+})
 
 watch(navOpen, (value) => {
     if(value){
@@ -21,8 +32,8 @@ watch(navOpen, (value) => {
     }
 })
 
-defineProps({
-    title: String,
+const props = defineProps({
+    title: String
 });
 
 onMounted(() =>{
@@ -34,6 +45,7 @@ router.on('finish', () =>{
     document.body.classList.remove('overflow-hidden')
     document.body.classList.remove('md:overflow-auto')
 })
+
 </script>
 
 <template>
@@ -53,7 +65,7 @@ router.on('finish', () =>{
             <navbar :navopen="navOpen" @toggleMenu="navOpen = !navOpen"/>
         </header>
         <!--    -->
-        <main class="pt-20 md:pt-12 px-2 md:px-4 lg:px-8 overflow-x-hidden">
+        <main class="pt-20 md:pt-12 px-2 md:px-4 lg:px-8">
             <slot></slot>
         </main>
         <alert />

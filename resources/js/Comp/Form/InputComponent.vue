@@ -72,6 +72,7 @@ const rows = ref(3)
             :rows="rows"
             :required="required"
             :readonly="readonly"
+            :value="modelValue"
             spellcheck="false"></textarea>
     </div>
 </template>

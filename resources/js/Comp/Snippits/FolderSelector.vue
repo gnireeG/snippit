@@ -1,14 +1,14 @@
 <template>
     <div :class="[root ? 'py-2' : '']">
         <div class="flex flex-col">
-            <Link v-if="root" :href="route('app.folders.index')" class="inline"><i class="bi bi-house-door-fill"></i> Home</Link>
-            <div v-for="folder in folders" class="pl-1 mt-0.5">
+            <Link @dragover.prevent @drop="handleDrop($event, store.state.path.id)" v-if="root" :href="route('app.folders.index')" class="inline"><i class="bi bi-house-door-fill"></i> Home</Link>
+            <div v-for="folder in folders" class="pl-1 mt-0.5" @dragover.prevent @drop="handleDrop($event, folder.id)">
                 <div class="flex items-center gap-2 text-sm whitespace-nowrap px-1 py-0.5 rounded-md group" :class="[store.state.currentFolder.id == folder.id ? 'bg-secondary' : 'bg-primary hover']">
                     <button title="Load subfolders" @click="loadSubfolders(folder)" class="transform transition-transform py-0.5" :class="[folder.showSubfolders ? 'rotate-90' : '']">
                             <i class="bi bi-caret-right-fill"></i>
                     </button>
                     <button :title="folder.name" @click="openFolder(folder)" class="w-full text-left truncate">{{ folder.name }}</button>
-                    <Dropdown align="right" width="28" class="opacity-0 group-hover:opacity-100">
+                    <Dropdown align="right" width="28" class="md:opacity-0 md:group-hover:opacity-100">
                         <template #trigger>
                             <button title="Options" class="px-1"><i class="bi bi-three-dots"></i></button>
                         </template>
@@ -150,6 +150,20 @@ function openFolder(folder){
             })
             window.history.pushState({}, '', path)
             store.commit('updateCurrentFolder', response.data.folder)
+        })
+}
+
+function handleDrop(e, folderId){
+    e.stopPropagation()
+    const event = e.dataTransfer.getData('event')
+    const snippitId = e.dataTransfer.getData('snippitId')
+    console.log(event, snippitId, folderId)
+    http.post(route('app.snippit.move'), {snippit_id: snippitId, folder_id: folderId})
+        .then((response)=>{
+            if(response.status == 200){
+                store.commit('addAlert', {type: 'success', message: response.data.message})
+                store.commit('removeSnippit', {snippitId: snippitId, folderId: folderId})
+            }
         })
 }
 </script>
