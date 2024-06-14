@@ -117,4 +117,20 @@ class SnippitController extends Controller
 
         return response()->json(['message' => 'Snippit moved successfully']);
     }
+
+    public function destroy(Request $request){
+        $validated = $request->validate([
+            'id' => 'required|numeric',
+        ]);
+
+        $snippit = Snippit::where('team_id', auth()->user()->currentTeam->id)->where('id', $validated['id'])->first();
+
+        if(!$snippit){
+            abort(404);
+        }
+
+        $snippit->delete();
+
+        return response()->json(['message' => 'Snippit deleted successfully']);
+    }
 }

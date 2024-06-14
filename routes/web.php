@@ -58,6 +58,7 @@ Route::middleware([
             Route::post('/store', [SnippitController::class, 'store'])->name('app.snippit.store');
             Route::post('/update', [SnippitController::class, 'update'])->name('app.snippit.update');
             Route::post('/move', [SnippitController::class, 'move'])->name('app.snippit.move');
+            Route::delete('/delete', [SnippitController::class, 'destroy'])->name('app.snippit.destroy');
         });
 
         // Homepage OOB

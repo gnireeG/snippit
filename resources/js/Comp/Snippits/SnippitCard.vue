@@ -18,6 +18,9 @@
                         <i v-else class="bi bi-clipboard-check"></i>
                     </button>
                 </template>
+                <button v-if="deleteAble" class="btn btn-icon" title="Delete Snippit" @click="showDeleteModal = true">
+                    <i class="bi bi-trash"></i>
+                </button>
             </div>
             <div title="Move Snippit to another folder" :class="[draggable ? 'cursor-move' : '']" :draggable="draggable" @dragstart="handleDragStart" v-if="draggable"><i class="bi bi-folder-symlink"></i></div>
         </div>
@@ -43,6 +46,18 @@
             </template>
         </template>
     </DialogModal>
+    <DialogModal :show="showDeleteModal" @close="showDeleteModal = false" maxWidth="lg">
+        <template v-slot:title>
+            <h3 class="heading-3">Delete Snippit</h3>
+        </template>
+        <template v-slot:content>
+            <p>Are you sure you want to delete this snippit?</p>
+        </template>
+        <template v-slot:footer>
+            <button class="btn" @click="showDeleteModal = false">Cancel</button>
+            <button class="btn btn-danger" @click="deleteSnippit">Delete</button>
+        </template>
+    </DialogModal>
 </template>
 <script setup>
 import { computed, ref, shallowRef } from 'vue';
@@ -51,10 +66,15 @@ import DialogModal from '@/Components/DialogModal.vue';
 import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
 //import ShikiMonaco from '@/Comp/Codeeditors/ShikiMonaco.vue';
 import { useStore } from 'vuex';
+import http from '@/http';
 const store = useStore()
 const props = defineProps({
     snippit: Object,
     draggable: {
+        type: Boolean,
+        default: false
+    },
+    deleteAble: {
         type: Boolean,
         default: false
     }
@@ -122,6 +142,18 @@ const iconClass = computed(() => {
     }
     return `devicon-${value}-plain colored`
 })
+
+const showDeleteModal = ref(false)
+function deleteSnippit(){
+    showDeleteModal.value = false
+    http.delete(route('app.snippit.destroy', {id: props.snippit.id}))
+        .then(response => {
+            console.log(response)
+            store.commit('removeSnippit', {snippitId: props.snippit.id})
+            store.commit('addAlert', {type: 'success', message: response.data.message})
+        })
+        
+}
 
 const copied = ref(false)
 </script>

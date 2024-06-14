@@ -78,7 +78,7 @@ function submitNewFolder(){
                     <div class="autogrid gap-4 w-full mt-4">
                         <template v-if="store.state.currentFolder">
                             <template v-for="snippit in store.state.currentFolder.snippits">
-                                <SnippitCard :snippit="snippit" :draggable="true" />
+                                <SnippitCard :snippit="snippit" :draggable="true" :deleteAble="true" />
                             </template>
                         </template>
                     </div>
