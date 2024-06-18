@@ -18,7 +18,7 @@ class FolderController extends Controller {
 
         if (!$path) {
             $rootFolder->showSubfolders = true;
-            $rootFolder->load('snippits');
+            $rootFolder->load('snippits.tags');
             return Inertia::render('Folders/Index', [
                 'folder' => $rootFolder,
                 'path' => $rootFolder
@@ -39,7 +39,7 @@ class FolderController extends Controller {
             $currentFolder->showSubfolders = true;
         }
 
-        $currentFolder->load('snippits', 'subfolders');
+        $currentFolder->load('snippits.tags', 'subfolders');
 
         //dd($rootFolder->toArray());
 

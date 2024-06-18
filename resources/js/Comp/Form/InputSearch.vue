@@ -18,7 +18,7 @@
         >
         <button v-if="selectedItem == null" class="absolute top-8 right-4 text-gray-400 text-xl" style="pointer-events: none;"><i class="bi bi-chevron-down"></i></button>
         <button title="Clear selection" v-else class="absolute top-8 right-4 text-gray-400 text-xl" @click="clear"><i class="bi bi-x"></i></button>
-        <div class="absolute w-full bg-primary max-h-48 overflow-auto shadow-md" v-if="showDropdown">
+        <div class="absolute w-full bg-primary max-h-48 overflow-auto shadow-md z-10" v-if="showDropdown">
             <ul>
                 <li v-for="item in choicesList"><button :title="'Select ' + item.name" class="bg-primary hover py-2 px-4 w-full text-left" @mousedown="select(item)">{{ item.name }}</button></li>
             </ul>

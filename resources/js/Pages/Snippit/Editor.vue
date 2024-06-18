@@ -6,6 +6,7 @@
                     <InputComponent v-model="form.title" type="text" placeholder="Title" label="Title" required />
                     <InputComponent v-model="form.description" type="textarea" placeholder="Description" label="Description" required />
                     <InputSearch v-model="form.language" placeholder="Language" label="Language" :choices="langChoices" @select="changeLanguage" />
+                    <InputTag label="Tags" placeholder="Add Tags" @update="updateTags" :tags="form.tags" />
                     <p class="mt-2">Location</p>
                     <p class="text-gray-500">
                         <span class="whitespace-nowrap" v-for="(pathItem, index) in path">{{ pathItem.name }}<i v-if="index < path.length - 1" class="bi bi-chevron-right text-sm px-1.5"></i></span>
@@ -30,13 +31,15 @@ import { onMounted, reactive, ref, computed, watch, watchEffect, onUnmounted } f
 import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
 import InputComponent from '@/Comp/Form/InputComponent.vue';
 import InputSearch from '@/Comp/Form/InputSearch.vue';
+import InputTag from '@/Comp/Form/InputTag.vue';
 import { router, usePage } from '@inertiajs/vue3'
 
 
-
+function updateTags(tags){
+    form.tags = tags
+}
 
 function save(){
-    console.log(isNewSnippit.value)
     if(form.title.length > 3){
         if(isNewSnippit.value){
             router.post(route('app.snippit.store'), form)
@@ -79,7 +82,8 @@ const form = reactive({
     code: '',
     language: '',
     folder_id: null,
-    id: null
+    id: null,
+    tags: []
 })
 
 const langChoices = ref([
@@ -128,6 +132,7 @@ function populateForm(){
         form.code = props.snippit.code
         form.language = props.snippit.language
         form.id = props.snippit.id
+        form.tags = props.snippit.tags ? props.snippit.tags.map(tag => tag.name.en) : [];
     }
 }
 

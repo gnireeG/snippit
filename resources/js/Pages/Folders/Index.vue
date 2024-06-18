@@ -81,6 +81,10 @@ function submitNewFolder(){
                                 <SnippitCard :snippit="snippit" :draggable="true" :deleteAble="true" />
                             </template>
                         </template>
+                        <Link v-if="store.state.currentFolder" title="New Snippit" :href="route('app.snippit.showCreate') + '?folder_id=' + store.state.currentFolder.id" class="border-gray-400 flex justify-center items-center flex-col p-4">
+                            <i class="bi bi-plus-circle-dotted text-2xl"></i>
+                            <p>Create new Snippit</p>
+                        </Link>
                     </div>
                 </div>
             </div>

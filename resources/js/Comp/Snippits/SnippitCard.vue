@@ -7,6 +7,9 @@
             </div>
             <p class="mt-2">{{ snippit.description }}</p>
         </Link>
+        <div v-if="snippit.tags" class="mt-2">
+            <TagContainer :tags="snippit.tags" />
+        </div>
         <div class="flex justify-between items-center mt-4 border-t dark:border-slate-600 border-slate-400 pt-4">
             <div class="flex gap-2">
                 <button class="btn btn-icon" title="Preview Code" @click="openPreview">
@@ -63,6 +66,7 @@
 import { computed, ref, shallowRef } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import DialogModal from '@/Components/DialogModal.vue';
+import TagContainer from '@/Comp/Snippits/TagContainer.vue';
 import CodeMirror from '@/Comp/Codeeditors/CodeMirror.vue';
 //import ShikiMonaco from '@/Comp/Codeeditors/ShikiMonaco.vue';
 import { useStore } from 'vuex';

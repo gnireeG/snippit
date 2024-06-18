@@ -28,7 +28,7 @@ class SnippitController extends Controller
 
     public function showEdit(Request $request){
         $snippitId = $request->route('id');
-        $snippit = Snippit::where('team_id', auth()->user()->currentTeam->id)->where('id', $snippitId)->first();
+        $snippit = Snippit::where('team_id', auth()->user()->currentTeam->id)->where('id', $snippitId)->with('tags')->first();
         if(!$snippit){
             abort(404);
         }
@@ -49,6 +49,7 @@ class SnippitController extends Controller
             'folder_id' => 'required|numeric',
             'language' => 'required|string',
             'description' => 'nullable|string',
+            'tags' => 'nullable|array'
         ]);
 
         $folder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('id', $validated['folder_id'])->first();
@@ -67,6 +68,10 @@ class SnippitController extends Controller
             'user_id' => auth()->user()->id,
         ]);
 
+        if(isset($validated['tags'])){
+            $snippit->attachTags($validated['tags']);
+        }
+
         //return to_route('app.snippit.showEdit', ['id' => $snippit->id]);
         return redirect()->route('app.snippit.showEdit', ['id' => $snippit->id])->with('alert', ['type' => 'success', 'message' => 'Snippit created successfully']);
     }
@@ -79,6 +84,7 @@ class SnippitController extends Controller
             'language' => 'required|string',
             'description' => 'nullable|string',
             'id' => 'required|numeric',
+            'tags' => 'nullable|array'
         ]);
 
         $snippit = Snippit::where('team_id', auth()->user()->currentTeam->id)->where('id', $validated['id'])->first();
@@ -94,6 +100,8 @@ class SnippitController extends Controller
             'folder_id' => $validated['folder_id'],
             'description' => $validated['description'],
         ]);
+
+        $snippit->syncTags($validated['tags'] ?? []);
 
         return redirect()->back()->with('alert', ['type' => 'success', 'message' => 'Snippit updated successfully']);
     }
