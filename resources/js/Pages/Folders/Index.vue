@@ -8,10 +8,13 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DialogModal from '@/Components/DialogModal.vue';
 import InputText from '@/Comp/Form/InputComponent.vue';
 import FolderBreadcrumbs from '@/Comp/Snippits/FolderBreadcrumbs.vue';
+import InputComponent from '@/Comp/Form/InputComponent.vue';
 import http from '@/http';
 import { useStore } from 'vuex';
 
 const store = useStore()
+
+const searchVal = ref('')
 
 const props = defineProps({
     folder: Object,
@@ -51,11 +54,11 @@ function submitNewFolder(){
             <div class="flex gap-4 relative flex-col md:flex-row">
                 <div class="min-w-64 flex-grow relative">
                     <div class="top-0 sticky max-h-48 md:max-h-none overflow-y-auto md:overflow-y-visible pb-10 md:pb-0">
-                        <FolderSelector v-if="store.state.path" :root="true" :folders="store.state.path.subfolders" />
+                        <FolderSelector v-if="store.state.path" :root="true" :folders="store.state.path.subfolders" @navigate="searchVal = ''" />
                     </div>
                 </div>
                 <div class="w-full mt-8">
-                    <div class="flex justify-between">
+                    <div class="flex justify-between items-center">
                         <div>
                             <p class="text-sm mb-2">
                                 <FolderBreadcrumbs />
@@ -75,13 +78,16 @@ function submitNewFolder(){
                             </template>
                         </Dropdown>
                     </div>
+                    <div class="flex justify-end">
+                        <InputComponent v-model="searchVal" placeholder="Search" type="search" bgClass="bg-primary" size="sm" />
+                    </div>
                     <div class="autogrid gap-4 w-full mt-4">
                         <template v-if="store.state.currentFolder">
-                            <template v-for="snippit in store.state.currentFolder.snippits">
-                                <SnippitCard :snippit="snippit" :draggable="true" :deleteAble="true" />
+                            <template v-for="snippit in store.state.currentFolder.snippits" >
+                                <SnippitCard :snippit="snippit" :draggable="true" :deleteAble="true" :searchValue="searchVal" />
                             </template>
                         </template>
-                        <Link v-if="store.state.currentFolder" title="New Snippit" :href="route('app.snippit.showCreate') + '?folder_id=' + store.state.currentFolder.id" class="border-gray-400 flex justify-center items-center flex-col p-4">
+                        <Link v-if="store.state.currentFolder" title="New Snippit" :href="route('app.snippit.showCreate') + '?folder_id=' + store.state.currentFolder.id" class="border-2 border-dashed border-gray-400 flex justify-center items-center flex-col p-4">
                             <i class="bi bi-plus-circle-dotted text-2xl"></i>
                             <p>Create new Snippit</p>
                         </Link>

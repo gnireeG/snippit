@@ -62,7 +62,7 @@ class FolderController extends Controller {
         $validated = $request->validate([
             'folderId' => 'required|integer'
         ]);
-        $folder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('id', $validated['folderId'])->with('snippits')->first();
+        $folder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('id', $validated['folderId'])->with('snippits.tags')->first();
         $path = $folder->getPath();
         return response()->json(['folder' => $folder, 'path' => $path]);
     }

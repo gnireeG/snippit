@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-secondary rounded-lg px-4 py-3 flex flex-col jusitfy-between shadow-lg snippit-card">
+    <div class="bg-secondary rounded-lg px-4 py-3 flex flex-col jusitfy-between shadow-lg snippit-card" v-show="searchValue.length < 1 || snippit.title.toLowerCase().includes(searchValue.toLowerCase())">
         <Link :href="route('app.snippit.showEdit', {id: snippit.id})" class="h-full">
             <div class="flex justify-between">
                 <h3 class="heading-3">{{ snippit.title }}</h3>
@@ -81,6 +81,10 @@ const props = defineProps({
     deleteAble: {
         type: Boolean,
         default: false
+    },
+    searchValue: {
+        type: String,
+        default: ''
     }
 })
 

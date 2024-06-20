@@ -21,7 +21,7 @@
                     </Dropdown>
                 </div>
                 <div v-if="folder.subfolders && folder.subfolders.length > 0 && folder.showSubfolders" class="pl-1">
-                    <FolderSelector :folders="folder.subfolders" />
+                    <FolderSelector :folders="folder.subfolders" @navigate="emit('navigate')" />
                 </div>
                 <div class="pl-3" v-if="folder.showSubfolders">
                     <form @submit.prevent="()=>{addSubfolder(folder.id, folder.newSubfolderName);folder.newSubfolderName = ''}" class="flex gap-1">
@@ -72,6 +72,8 @@ const props = defineProps({
         default: false
     }
 })
+
+const emit = defineEmits(['navigate'])
 
 // DELETE FOLDER
 
@@ -139,7 +141,7 @@ function loadSubfolders(folder){
 function openFolder(folder){
     http.get(route('app.folders.loadFolderWithContent', {folderId: folder.id}))
         .then(response => {
-            let path = '/folder/'
+            let path = '/app/folder/'
             response.data.path.forEach((folder, i) => {
                 //dont add the slash on the end
                 if(i < response.data.path.length - 1){
@@ -150,6 +152,7 @@ function openFolder(folder){
             })
             window.history.pushState({}, '', path)
             store.commit('updateCurrentFolder', response.data.folder)
+            emit('navigate')
         })
 }
 
