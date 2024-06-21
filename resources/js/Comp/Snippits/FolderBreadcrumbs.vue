@@ -17,7 +17,7 @@ const path = computed(() => {
     if(simplePath){
         simplePath.shift();
         simplePath = simplePath.map((folder, index) => {
-            const pathSlug = '/folder/' + simplePath.slice(0, index + 1).map(f => f.slug).join('/');
+            const pathSlug = '/app/folder/' + simplePath.slice(0, index + 1).map(f => f.slug).join('/');
             return { ...folder, pathSlug };
         });
         return simplePath;

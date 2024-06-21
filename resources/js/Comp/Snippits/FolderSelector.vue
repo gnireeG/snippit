@@ -7,7 +7,7 @@
                     <button title="Load subfolders" @click="loadSubfolders(folder)" class="transform transition-transform py-0.5" :class="[folder.showSubfolders ? 'rotate-90' : '']">
                             <i class="bi bi-caret-right-fill"></i>
                     </button>
-                    <button :title="folder.name" @click="openFolder(folder)" class="w-full text-left truncate">{{ folder.name }}</button>
+                    <button :title="folder.name" @dblclick="showRenameModal(folder)" @click="openFolder(folder, store.state.pathToFolder(folder.id))" class="w-full text-left truncate py-0.5">{{ folder.name }}</button>
                     <Dropdown align="right" width="28" class="md:opacity-0 md:group-hover:opacity-100">
                         <template #trigger>
                             <button title="Options" class="px-1"><i class="bi bi-three-dots"></i></button>
@@ -57,12 +57,12 @@
         </template>
         <template v-slot:content>
             <form @submit.prevent="renameFolder">
-                <InputComponent v-model="renameFolderName" label="New folder name" />
+                <InputComponent v-model="renameFolderName" label="New folder name" placeholder="New folder name" :autofocus="true" bgClass="bg-primary" />
             </form>
         </template>
         <template v-slot:footer>
             <button class="btn" @click="cancelRenameFolder">Cancel</button>
-            <button class="btn btn-success" @click="renameFolder">Rename</button>
+            <button class="btn btn-success" @click="renameFolder" :disabled="renameFolderName == oldFolderName">Rename</button>
         </template>
     </DialogModal>
 </template>
@@ -90,12 +90,14 @@ const props = defineProps({
 
 const renameFolderModal = ref(false)
 const renameFolderName = ref('')
+const oldFolderName = ref('')
 const renameFolderId = ref(null)
 
 function showRenameModal(folder){
     renameFolderId.value = folder.id
     renameFolderName.value = folder.name
     renameFolderModal.value = true
+    oldFolderName.value = folder.name
 }
 
 function cancelRenameFolder(){
@@ -103,19 +105,32 @@ function cancelRenameFolder(){
     renameFolderModal.value = false
     renameFolderName.value = ''
     renameFolderId.value = null
+    oldFolderName.value = ''
 }
 
 function renameFolder(){
-    http.put(route('app.folders.rename', {folder_id: renameFolderId.value, name: renameFolderName.value}))
-        .then(response => {
-            if(response.status == 200){
-                store.commit('renameFolder', {folder: response.data.folder})
-                store.commit('addAlert', {type: 'success', message: response.data.message})
-                cancelRenameFolder()
-            }
-        })
+    if(renameFolderName.value !== oldFolderName.value){
+
+        http.put(route('app.folders.rename', {folder_id: renameFolderId.value, name: renameFolderName.value}))
+            .then(response => {
+                if(response.status == 200){
+                    store.commit('renameFolder', {folder: response.data.folder})
+                    store.commit('addAlert', {type: 'success', message: response.data.message})
+                    if(store.state.currentFolder.id == response.data.folder.id){
+                        // update the url
+                        let path = '/'
+                        let pathArray = window.location.pathname.split('/').filter(Boolean)
+                        pathArray[pathArray.length - 1] = response.data.folder.slug
+                        path += pathArray.join('/')
+                        window.history.pushState({}, '', path)
+                    }
+                    cancelRenameFolder()
+                }
+            })
+    }
     
 }
+
 
 const emit = defineEmits(['navigate'])
 
@@ -182,22 +197,13 @@ function loadSubfolders(folder){
 }
 
 
-function openFolder(folder){
-    http.get(route('app.folders.loadFolderWithContent', {folderId: folder.id}))
-        .then(response => {
-            let path = '/app/folder/'
-            response.data.path.forEach((folder, i) => {
-                //dont add the slash on the end
-                if(i < response.data.path.length - 1){
-                    path += folder.slug + '/'
-                } else{
-                    path += folder.slug
-                }
-            })
-            window.history.pushState({}, '', path)
-            store.commit('updateCurrentFolder', response.data.folder)
+function openFolder(folder, url){
+    router.visit(url + '?id=' + folder.id, {
+        only: ['folder'],
+        onFinish: () =>{
             emit('navigate')
-        })
+        }
+    })
 }
 
 function handleDrop(e, folderId){

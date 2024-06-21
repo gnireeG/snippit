@@ -11,43 +11,55 @@ use Inertia\Inertia;
 class FolderController extends Controller {
 
     public function index(Request $request, $path = null){
-        $rootFolder = Folder::where('team_id', auth()->user()->currentTeam->id)
-            ->where('root', true)
-            ->with('subfolders')
-            ->first();
+        $only = $request->header('X-Inertia-Partial-Data') ? explode(',', $request->header('X-Inertia-Partial-Data')) : [];
+        $folder_id = $request->query('id') ? $request->query('id') : null;
 
-        if (!$path) {
-            $rootFolder->showSubfolders = true;
-            $rootFolder->load('snippits.tags');
+        if(empty($only) || !$folder_id){
+
+            $rootFolder = Folder::where('team_id', auth()->user()->currentTeam->id)
+                ->where('root', true)
+                ->with('subfolders')
+                ->first();
+
+            if (!$path) {
+                $rootFolder->showSubfolders = true;
+                $rootFolder->load('snippits.tags');
+                return Inertia::render('Folders/Index', [
+                    'folder' => $rootFolder,
+                    'path' => $rootFolder
+                ]);
+            }
+
+            $slugs = explode('/', trim($path, '/'));
+            $currentFolder = $rootFolder;
+            $currentFolder->showSubfolders = true;
+
+            foreach ($slugs as $slug) {
+                $currentFolder = $currentFolder->subfolders->firstWhere('slug', $slug);
+
+                if (!$currentFolder) {
+                    abort(404);
+                }
+
+                $currentFolder->showSubfolders = true;
+            }
+
+            $currentFolder->load('snippits.tags', 'subfolders');
+
             return Inertia::render('Folders/Index', [
-                'folder' => $rootFolder,
-                'path' => $rootFolder
+                'folder' => $currentFolder,
+                'path' => $rootFolder,
+                'simplePath' => $currentFolder->getPath()
             ]);
         }
 
-        $slugs = explode('/', trim($path, '/'));
-        $currentFolder = $rootFolder;
-        $currentFolder->showSubfolders = true;
+        // partial reload (only clicked folder)
 
-        foreach ($slugs as $slug) {
-            $currentFolder = $currentFolder->subfolders->firstWhere('slug', $slug);
-
-            if (!$currentFolder) {
-                abort(404);
-            }
-
-            $currentFolder->showSubfolders = true;
-        }
-
-        $currentFolder->load('snippits.tags', 'subfolders');
-
-        //dd($rootFolder->toArray());
-
+        $folder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('id', $folder_id)->with('snippits.tags')->first();
         return Inertia::render('Folders/Index', [
-            'folder' => $currentFolder,
-            'path' => $rootFolder,
-            'simplePath' => $currentFolder->getPath()
+            'folder' => $folder
         ]);
+        
     }
 
     public function loadSubfoldersById(Request $request){
@@ -136,11 +148,23 @@ class FolderController extends Controller {
     }
 
     public function rename(Request $request){
+        
         $validated = $request->validate([
             'folder_id' => 'required|integer',
             'name' => 'required|string|min:3|max:40'
         ]);
+
         $folder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('id', $validated['folder_id'])->first();
+        
+        $duplicates = Folder::where('team_id', auth()->user()->currentTeam->id)
+            ->where('parent_id', $folder->parent_id)
+            ->where('name', $validated['name'])
+            ->count();
+
+        // if there are duplicates, return an error message
+        if ($duplicates > 0) {
+            return response()->json(['message' => 'Folder already exists'], 422);
+        }
         $folder->name = $validated['name'];
         $folder->slug = Str::slug($validated['name']);
         $folder->save();

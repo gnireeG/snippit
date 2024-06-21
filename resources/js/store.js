@@ -24,6 +24,29 @@ const store = createStore({
                     }
                 }
                 return findFolder(id, this.path);
+            },
+            reorderFolders: function(folder){
+                // reorder folders alphabetically
+                folder.subfolders.sort((a, b) => {
+                    if(a.name.toLowerCase() < b.name.toLowerCase()) return -1;
+                    if(a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+                    return 0;
+                });
+            },
+            pathToFolder: function(id){
+                let path = route('app.folders.index')
+                let pathArr = []
+                let currentFolder = this.findFolderById(id)
+                while(currentFolder){
+                    pathArr.unshift(currentFolder.slug)
+                    currentFolder = currentFolder.parent_id ? this.findFolderById(currentFolder.parent_id) : null
+                }
+                //remove root because it is not needed
+                pathArr.shift()
+                pathArr.forEach(slug => {
+                    path += '/' + slug
+                })
+                return path
             }
         }
 
@@ -61,6 +84,7 @@ const store = createStore({
         addNewFolder(state, data){
             let parent = state.findFolderById(data.parentID)
             parent.subfolders.push(data.folder)
+            state.reorderFolders(parent)
         },
         deleteFolder(state, data){
             let parent = state.findFolderById(data.parent_id);
@@ -78,9 +102,13 @@ const store = createStore({
         renameFolder(state, data){
             let folderInPath = state.findFolderById(data.folder.id);
             folderInPath.name = data.folder.name;
+            folderInPath.slug = data.folder.slug
             if(state.currentFolder.id == data.folder.id){
                 state.currentFolder.name = data.folder.name;
+                state.currentFolder.slug = data.folder.slug;
             }
+            let parent = state.findFolderById(data.folder.parent_id);
+            state.reorderFolders(parent)
         }
     },
     getters: {
@@ -100,7 +128,7 @@ const store = createStore({
                 return null
             }
             return buildPath(state.path, state.currentFolder.id);
-        }
+        },
     }
 });
 
