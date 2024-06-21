@@ -12,7 +12,7 @@ class FolderController extends Controller {
 
     public function index(Request $request, $path = null){
         $only = $request->header('X-Inertia-Partial-Data') ? explode(',', $request->header('X-Inertia-Partial-Data')) : [];
-        $folder_id = $request->query('id') ? $request->query('id') : null;
+        $folder_id = $request->header('X-Folder-Id');
 
         if(empty($only) || !$folder_id){
 
@@ -57,7 +57,7 @@ class FolderController extends Controller {
 
         $folder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('id', $folder_id)->with('snippits.tags')->first();
         return Inertia::render('Folders/Index', [
-            'folder' => $folder
+            'folder' => $folder,
         ]);
         
     }

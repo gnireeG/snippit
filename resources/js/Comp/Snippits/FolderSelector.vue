@@ -198,7 +198,10 @@ function loadSubfolders(folder){
 
 
 function openFolder(folder, url){
-    router.visit(url + '?id=' + folder.id, {
+    router.visit(url, {
+        headers: {
+            'X-Folder-Id': folder.id
+        },
         only: ['folder'],
         onFinish: () =>{
             emit('navigate')
