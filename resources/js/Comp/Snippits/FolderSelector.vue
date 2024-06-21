@@ -14,7 +14,7 @@
                         </template>
                         <template #content>
                             <div class="rounded-lg p-2 flex">
-                                <button class="btn btn-transparent w-full" title="Rename folder"><i class="bi bi-input-cursor-text text-lg"></i></button>
+                                <button class="btn btn-transparent w-full" title="Rename folder" @click="showRenameModal(folder)"><i class="bi bi-input-cursor-text text-lg"></i></button>
                                 <button class="btn btn-transparent w-full" title="Delete folder" @click="showDeleteFolderModal(folder)"><i class="bi bi-trash2 text-lg"></i></button>
                             </div>
                         </template>
@@ -51,6 +51,20 @@
         </template>
 
     </DialogModal>
+    <DialogModal :show="renameFolderModal" @close="cancelRenameFolder" maxWidth="xl">
+        <template v-slot:title>
+            <h3 class="heading-3">Rename folder</h3>
+        </template>
+        <template v-slot:content>
+            <form @submit.prevent="renameFolder">
+                <InputComponent v-model="renameFolderName" label="New folder name" />
+            </form>
+        </template>
+        <template v-slot:footer>
+            <button class="btn" @click="cancelRenameFolder">Cancel</button>
+            <button class="btn btn-success" @click="renameFolder">Rename</button>
+        </template>
+    </DialogModal>
 </template>
 
 <script setup>
@@ -60,6 +74,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DialogModal from '@/Components/DialogModal.vue';
 import http from '@/http';
 import store from '@/store';
+import InputComponent from '../Form/InputComponent.vue';
 
 
 const props = defineProps({
@@ -72,6 +87,35 @@ const props = defineProps({
         default: false
     }
 })
+
+const renameFolderModal = ref(false)
+const renameFolderName = ref('')
+const renameFolderId = ref(null)
+
+function showRenameModal(folder){
+    renameFolderId.value = folder.id
+    renameFolderName.value = folder.name
+    renameFolderModal.value = true
+}
+
+function cancelRenameFolder(){
+
+    renameFolderModal.value = false
+    renameFolderName.value = ''
+    renameFolderId.value = null
+}
+
+function renameFolder(){
+    http.put(route('app.folders.rename', {folder_id: renameFolderId.value, name: renameFolderName.value}))
+        .then(response => {
+            if(response.status == 200){
+                store.commit('renameFolder', {folder: response.data.folder})
+                store.commit('addAlert', {type: 'success', message: response.data.message})
+                cancelRenameFolder()
+            }
+        })
+    
+}
 
 const emit = defineEmits(['navigate'])
 

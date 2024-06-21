@@ -69,6 +69,7 @@ Route::middleware([
                 Route::get('/{path}', [FolderController::class, 'index'])->where('path', '.*')->name('app.folders.path');
                 Route::post('/create', [FolderController::class, 'create'])->name('app.folders.create');
                 Route::delete('/delete', [FolderController::class, 'delete'])->name('app.folders.delete');
+                Route::put('/rename', [FolderController::class, 'rename'])->name('app.folders.rename');
             });
     
             Route::group(['prefix' => '/snippit'], function(){

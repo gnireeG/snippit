@@ -74,6 +74,13 @@ const store = createStore({
             if (index !== -1) {
                 state.currentFolder.snippits.splice(index, 1);
             }
+        },
+        renameFolder(state, data){
+            let folderInPath = state.findFolderById(data.folder.id);
+            folderInPath.name = data.folder.name;
+            if(state.currentFolder.id == data.folder.id){
+                state.currentFolder.name = data.folder.name;
+            }
         }
     },
     getters: {

@@ -134,4 +134,17 @@ class FolderController extends Controller {
 
         return response()->json(['message' => 'Folder '.$folderName.' deleted', 'deleted_folder' => $deletedFolder]);
     }
+
+    public function rename(Request $request){
+        $validated = $request->validate([
+            'folder_id' => 'required|integer',
+            'name' => 'required|string|min:3|max:40'
+        ]);
+        $folder = Folder::where('team_id', auth()->user()->currentTeam->id)->where('id', $validated['folder_id'])->first();
+        $folder->name = $validated['name'];
+        $folder->slug = Str::slug($validated['name']);
+        $folder->save();
+
+        return response()->json(['message' => 'Folder renamed', 'folder' => $folder]);
+    }
 }
