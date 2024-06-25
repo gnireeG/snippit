@@ -4,7 +4,7 @@
             {{ label }}
         </label>
         <div class="border border-gray-300 dark:border-gray-700 bg-transparent dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-0 dark:focus:ring-0 rounded-md shadow-sm  w-full flex gap-1 items-center px-4 flex-wrap">
-            <input type="text" class="py-4 pl-0 bg-transparent border-0 w-full focus:border-0 focus:ring-0" :placeholder="placeholder" :id="id" v-model="inputVal" @keydown.enter="addTag">
+            <input type="text" class="pt-4 pl-0 bg-transparent border-0 w-full focus:border-0 focus:ring-0" :placeholder="placeholder" :id="id" v-model="inputVal" @keydown.enter="addTag" :class="{'pb-4' : tagsLocal.length < 1}">
             <div class="mb-4 flex gap-1 flex-wrap" v-if="tagsLocal.length > 0">
                 <template v-for="tag in tagsLocal" >
                     <div class="rounded-md px-1 py-0.5 flex gap-1 items-center" :class="bgClassInverted">
@@ -46,7 +46,7 @@ const inputVal = ref('')
 const id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
 function addTag(){
-    if(inputVal.value.length > 0){
+    if(inputVal.value.length > 0 && !tagsLocal.value.includes(inputVal.value)){
         tagsLocal.value.push(inputVal.value)
         inputVal.value = ''
     }

@@ -7,7 +7,7 @@
                     <button title="Load subfolders" @click="loadSubfolders(folder)" class="transform transition-transform py-0.5" :class="[folder.showSubfolders ? 'rotate-90' : '']">
                             <i class="bi bi-caret-right-fill"></i>
                     </button>
-                    <button :title="folder.name" @dblclick="showRenameModal(folder)" @click="openFolder(folder, store.state.pathToFolder(folder.id))" class="w-full text-left truncate py-0.5">{{ folder.name }}</button>
+                    <button :title="folder.name" @click="openFolder(folder, store.state.pathToFolder(folder.id))" class="w-full text-left truncate py-0.5">{{ folder.name }}</button>
                     <Dropdown align="right" width="28" class="md:opacity-0 md:group-hover:opacity-100">
                         <template #trigger>
                             <button title="Options" class="px-1"><i class="bi bi-three-dots"></i></button>
@@ -92,6 +92,9 @@ const renameFolderModal = ref(false)
 const renameFolderName = ref('')
 const oldFolderName = ref('')
 const renameFolderId = ref(null)
+
+// FIXME: Double click to open rename modal doesn't work anymore.
+//  @dblclick="showRenameModal(folder)"
 
 function showRenameModal(folder){
     renameFolderId.value = folder.id
